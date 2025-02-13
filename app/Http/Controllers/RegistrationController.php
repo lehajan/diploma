@@ -21,6 +21,7 @@ class RegistrationController extends Controller
             'surname' => 'required | string',
             'patronymic' => 'required | string',
             'phone' => 'required | string | unique:users',
+            'email' => 'required | email | unique:users',
             'password' => 'required | string | min:8',
             'verification_code' => 'required | integer'
         ]);
@@ -51,6 +52,7 @@ class RegistrationController extends Controller
             'surname' => $data['surname'],
             'patronymic' => $data['patronymic'],
             'phone' => $phone,
+            'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
 
@@ -58,6 +60,11 @@ class RegistrationController extends Controller
 
         return response()->json('Регистрация прошла успешно!');
     }
+
+//    public function enterCode()
+//    {
+//
+//    }
 
     public function sendVerificationCode(Request $request)
     {

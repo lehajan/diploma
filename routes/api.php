@@ -19,8 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'check.guest'], function () {
-    Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode')->name('sendVerificationCode');
+    Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode');
     Route::post('reg', 'App\Http\Controllers\RegistrationController@reg');
+//    Route::post('enterCode', 'App\Http\Controllers\RegistrationController@enterCode');
+
 });
 
 Route::group(['middleware' => 'jwt.auth'], function () {
@@ -28,7 +30,8 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::delete('user/delete', 'App\Http\Controllers\UserController@delete');
     Route::patch('user/update', 'App\Http\Controllers\UserController@update');
 
-    Route::post('advertisement/create', 'App\Http\Controllers\AdvertisementController@create');
+//    Route::post('advertisement/create', 'App\Http\Controllers\AdvertisementController@create');
+    Route::post('feedback/create', 'App\Http\Controllers\FeedbackController@create');
 });
 
 //Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode');
