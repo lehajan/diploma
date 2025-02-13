@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('realty', function (Blueprint $table) {
             $table->id();
             $table->enum('type_rent', ['посуточная', 'долгосрочная']);
-            $table->unsignedBigInteger('type_realty_id');
+            $table->enum('type_realty', ['Квартира', 'Комната', 'Дом, дача', 'апартаменты']);
             $table->string('address');
             $table->float('price');
             $table->date('date_start');
