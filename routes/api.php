@@ -20,8 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'check.guest'], function () {
     Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode');
+    Route::post('verifyCode', 'App\Http\Controllers\RegistrationController@verifyCode');
     Route::post('reg', 'App\Http\Controllers\RegistrationController@reg');
-//    Route::post('enterCode', 'App\Http\Controllers\RegistrationController@enterCode');
 
 });
 

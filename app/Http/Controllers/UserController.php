@@ -83,4 +83,9 @@ class UserController extends Controller
         }
         return response()->json(['message' => 'Данные обновлены']);
     }
+
+    public function passwordRecovery()
+    {
+
+    }
 }
