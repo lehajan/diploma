@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('realty', function (Blueprint $table) {
             $table->id();
-            $table->enum('type_rent', ['посуточная', 'долгосрочная']);
-            $table->enum('type_realty', ['Квартира', 'Комната', 'Дом, дача', 'апартаменты']);
+            $table->unsignedBigInteger('type_rent_id');
+            $table->unsignedBigInteger('type_realty_id');
             $table->string('address');
             $table->float('price');
-            $table->date('date_start');
-            $table->date('date_end');
+            $table->date('date_start')->nullable();
+            $table->date('date_end')->nullable();
             $table->enum('count_rooms', ['студия', '1', '2', '3', '4', '5', '6+', 'свободная планировка']);
             $table->double('total_square');
             $table->double('living_square');
