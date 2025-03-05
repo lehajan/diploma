@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('type_realty_id');
             $table->string('address');
             $table->float('price');
-            $table->date('date_start')->nullable();
-            $table->date('date_end')->nullable();
+//            $table->date('date_start')->nullable();
+//            $table->date('date_end')->nullable();
             $table->enum('count_rooms', ['студия', '1', '2', '3', '4', '5', '6+', 'свободная планировка']);
             $table->double('total_square');
             $table->double('living_square');
