@@ -22,6 +22,7 @@ Route::group(['middleware' => 'check.guest'], function () {
     Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode');
     Route::post('verifyCode', 'App\Http\Controllers\RegistrationController@verifyCode');
     Route::post('reg', 'App\Http\Controllers\RegistrationController@reg');
+    Route::get('index', 'App\Http\Controllers\MainController@index');
 
 });
 
@@ -30,8 +31,9 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::delete('user/delete', 'App\Http\Controllers\UserController@delete');
     Route::patch('user/update', 'App\Http\Controllers\UserController@update');
 
-//    Route::post('advertisement/create', 'App\Http\Controllers\AdvertisementController@create');
-    Route::post('feedback/create', 'App\Http\Controllers\FeedbackController@create');
+    Route::post('realty/store', 'App\Http\Controllers\RealtyController@store');
+    Route::delete('realty/delete/{realty}', 'App\Http\Controllers\RealtyController@delete');
+//    Route::post('feedback/create', 'App\Http\Controllers\FeedbackController@create');
 });
 
 //Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode');

@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('realty', function (Blueprint $table) {
+        Schema::create('realties', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('type_rent_id');
             $table->unsignedBigInteger('type_realty_id');
             $table->string('address');

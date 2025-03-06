@@ -9,8 +9,8 @@ class MainController extends Controller
 {
     public function index()
     {
-        $ads =Ads::all();
-
-        return compact('ads');
+        $ads = Ads::all();
+        $ads->load('realty');
+        return $ads;
     }
 }

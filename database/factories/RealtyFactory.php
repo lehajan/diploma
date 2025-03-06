@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\TypeRealty;
 use App\Models\TypeRent;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +20,7 @@ class RealtyFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => User::get()->random()->id,
             'type_rent_id' => TypeRent::get()->random()->id,
             'type_realty_id' => TypeRealty::get()->random()->id,
             'address' => $this->faker->address(),

@@ -19,7 +19,6 @@ class AdsFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::get()->random()->id,
             'realty_id' => Realty::get()->random()->id,
         ];
     }

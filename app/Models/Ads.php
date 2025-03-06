@@ -10,7 +10,11 @@ class Ads extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'realty_id'
     ];
+
+    public function realty()
+    {
+        return $this->belongsTo(Realty::class);
+    }
 }
