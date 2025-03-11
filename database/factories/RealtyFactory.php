@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\TypeRealty;
 use App\Models\TypeRent;
+use App\Models\TypeRepair;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -32,6 +33,7 @@ class RealtyFactory extends Factory
             'living_square' => $this->faker->randomFloat(2, 10, 100),
             'kitchen_square' => $this->faker->randomFloat(2, 10, 100),
             'floor' => $this->faker->numberBetween(1, 25),
+            'repair_id' => TypeRepair::get()->random()->id,
             'year_construction' => $this->faker->year(),
             'image' => $this->faker->imageUrl(),
             'description' => $this->faker->text(),

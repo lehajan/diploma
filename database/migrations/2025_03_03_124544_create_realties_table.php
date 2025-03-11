@@ -25,6 +25,7 @@ return new class extends Migration
             $table->double('living_square');
             $table->double('kitchen_square');
             $table->integer('floor');
+            $table->unsignedBigInteger('repair_id');
             $table->integer('year_construction');
 //            $table->enum('type_bathroom', ['раздельный', 'совмещенный']);
 //            $table->enum('balcony', ['лоджия', 'балкон']);

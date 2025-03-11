@@ -23,6 +23,8 @@ Route::group(['middleware' => 'check.guest'], function () {
     Route::post('verifyCode', 'App\Http\Controllers\RegistrationController@verifyCode');
     Route::post('reg', 'App\Http\Controllers\RegistrationController@reg');
     Route::get('index', 'App\Http\Controllers\MainController@index');
+    Route::get('preview', 'App\Http\Controllers\RealtyController@preview');
+    Route::get('realty/filter', 'App\Http\Controllers\RealtyController@filter');
 
 });
 

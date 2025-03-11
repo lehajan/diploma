@@ -9,13 +9,27 @@ class Realty extends Model
 {
     use HasFactory;
 
-    public mixed $type_rent_id;
-    public mixed $type_realty_id;
-
-    public function realties()
+    public function typeRent()
     {
-        return $this->hasMany(Realty::class); // Пример для отношения один-ко-многим
+        return $this->belongsTo(TypeRent::class, 'type_rent_id');
+        // Если внешний ключ в таблице Realty называется type_rent_id
     }
+
+    public function typeRealty()
+    {
+        return $this->belongsTo(TypeRealty::class, 'type_realty_id');
+    }
+
+//    public function getTypeRentIdAttribute($value)
+//    {
+//        return $this->typeRent->title ?? $value;
+//    }
+//
+//    public function getTypeRealtyIdAttribute($value)
+//    {
+//        return $this->typeRealty->title ?? $value;
+//    }
+
 
     protected $fillable = [
         'user_id',
@@ -30,8 +44,19 @@ class Realty extends Model
         'living_square',
         'kitchen_square',
         'floor',
+        'repair_id',
         'year_construction',
         'image',
         'description'
     ];
+
+    protected $hidden = [
+        'type_rent',
+        'type_realty',
+    ];
+
+//    protected $appends = [
+//        'type_rent_id',
+//        'type_realty_id',
+//    ];
 }

@@ -34,19 +34,6 @@ class RealtyController extends Controller
         $user_id = Auth::id();
         $data['user_id'] = $user_id;
         $realty = Realty::create($data);
-//        $realty = new Realty();
-//        $realty->type_rent_id = $request->type_rent_id;
-//        $realty->type_realty_id = $request->type_realty_id;
-//        $realty->address = $request->address;
-//        $realty->price = $request->price;
-//        $realty->count_rooms = $request->count_rooms;
-//        $realty->total_square = $request->total_square;
-//        $realty->living_square = $request->living_square;
-//        $realty->kitchen_square = $request->kitchen_square;
-//        $realty->floor = $request->floor;
-//        $realty->year_construction = $request->year_construction;
-//
-//        $realty = Realty::create($data);
 
         if($request->hasFile('image')) {
             $path = $request->file('image')->store('images', 'public');
@@ -69,5 +56,93 @@ class RealtyController extends Controller
             return response()->json(['Вы не можете удалить эту квартиру']);
         }
 
+    }
+
+//    public function preview()
+//    {
+//        $apartments = Realty::all();
+//        $apartments->load(['typeRent', 'typeRealty']);
+//        foreach ($apartments as $apartment) {
+//            echo $apartment->typeRent->title; // Название типа аренды
+//            echo $apartment->typeRealty->title; // Название типа недвижимост
+//        }
+//        return $apartments;
+//    }
+    public function preview()
+    {
+        $apartments = Realty::all();
+
+        $result = [];
+        foreach ($apartments as $apartment) {
+            $apartmentData = $apartment->toArray(); // Преобразуем объект в массив
+            $apartmentData['rent_type'] = $apartment->typeRent ? $apartment->typeRent->title : 'Не указано';
+            $apartmentData['realty_type'] = $apartment->typeRealty ? $apartment->typeRealty->title : 'Не указано';
+            unset($apartmentData['type_rent_id'], $apartmentData['type_realty_id']); // Удаляем ненужные id
+
+            $result[] = $apartmentData;
+        }
+
+        return response()->json($result);
+    }
+
+    public function filter(Request $request)
+    {
+        $query = Realty::query();
+
+        // Тип аренды
+        if ($request->has('type_rent_id')) {
+            $query->where('type_rent_id', $request->input('type_rent_id'));
+        }
+
+        // Тип недвижимости
+        if ($request->has('type_realty_id')) {
+            $query->where('type_realty_id', $request->input('type_realty_id'));
+        }
+
+        // Цена
+        if ($request->has('price_min')) {
+            $query->where('price', '>=', $request->input('price_min'));
+        }
+        if ($request->has('price_max')) {
+            $query->where('price', '<=', $request->input('price_max'));
+        }
+
+        // Количество комнат
+        if ($request->has('count_rooms')) {
+            $query->where('count_rooms', $request->input('count_rooms'));
+        }
+
+        // Общая площадь
+        if ($request->has('total_square_min')) {
+            $query->where('total_square', '>=', $request->input('total_square_min'));
+        }
+        if ($request->has('total_square_max')) {
+            $query->where('total_square', '<=', $request->input('total_square_max'));
+        }
+
+        // Жилая площадь
+        if ($request->has('living_square_min')) {
+            $query->where('living_square', '>=', $request->input('living_square_min'));
+        }
+        if ($request->has('living_square_max')) {
+            $query->where('living_square', '<=', $request->input('living_square_max'));
+        }
+
+        // Этаж
+        if ($request->has('floor_min')) {
+            $query->where('floor', '>=', $request->input('floor_min'));
+        }
+        if ($request->has('floor_max')) {
+            $query->where('floor', '<=', $request->input('floor_max'));
+        }
+
+        // Ремонт
+        if ($request->has('repair_type')) {
+            $query->where('repair_type', $request->input('repair_type'));
+        }
+
+        $realties = $query->get();
+
+        return response()->json($realties);
     }
 }
