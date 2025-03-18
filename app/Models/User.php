@@ -61,4 +61,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function realty()
+    {
+        return $this->hasMany(Realty::class, 'user_id');
+    }
 }

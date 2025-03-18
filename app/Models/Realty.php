@@ -20,6 +20,16 @@ class Realty extends Model
         return $this->belongsTo(TypeRealty::class, 'type_realty_id');
     }
 
+    public function typeRepair()
+    {
+        return $this->belongsTo(TypeRepair::class, 'repair_id');
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 //    public function getTypeRentIdAttribute($value)
 //    {
 //        return $this->typeRent->title ?? $value;

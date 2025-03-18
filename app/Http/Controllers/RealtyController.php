@@ -26,6 +26,7 @@ class RealtyController extends Controller
             'living_square' => 'required|numeric',
             'kitchen_square' => 'required|numeric',
             'floor' => 'required|integer',
+            'repair_id' => 'required|integer',
             'year_construction' => 'required|integer|max:' . date('Y'),
             'image' => 'nullable|image|max:2048',
             'description' => 'nullable|string',
