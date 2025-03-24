@@ -25,7 +25,7 @@ Route::group(['middleware' => 'check.guest'], function () {
     Route::get('index', 'App\Http\Controllers\MainController@index');
     Route::get('preview', 'App\Http\Controllers\RealtyController@preview');
     Route::get('realty/filter', 'App\Http\Controllers\RealtyController@filter');
-
+    Route::get('show/{realty}', 'App\Http\Controllers\MainController@show');
 });
 
 Route::group(['middleware' => 'jwt.auth'], function () {
@@ -35,7 +35,14 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 
     Route::post('realty/store', 'App\Http\Controllers\RealtyController@store');
     Route::delete('realty/delete/{realty}', 'App\Http\Controllers\RealtyController@delete');
-//    Route::post('feedback/create', 'App\Http\Controllers\FeedbackController@create');
+
+    Route::post('favorite/addToFavorite/{realty}', 'App\Http\Controllers\FavoriteController@addToFavorite');
+    Route::delete('favorite/destroy/{realty}', 'App\Http\Controllers\FavoriteController@destroy');
+    Route::get('favorite/show', 'App\Http\Controllers\FavoriteController@show');
+
+    Route::post('feedback/create', 'App\Http\Controllers\FeedbackController@create');
+    Route::delete('feedback/delete/{feedback}', 'App\Http\Controllers\FeedbackController@delete');
+
 });
 
 //Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode');

@@ -11,8 +11,9 @@ class MainController extends Controller
 {
     public function index()
     {
-        $ads = Realty::all();
-        $ads->load(['typeRent', 'typeRealty', 'typeRepair', 'owner']);
+        $ads = Realty::with(['typeRent', 'typeRealty', 'typeRepair', 'owner'])->get();
+
+        // Преобразование данных
         $ads = $ads->map(function ($ad) {
             return [
                 'id' => $ad->id,
@@ -35,8 +36,6 @@ class MainController extends Controller
             ];
         });
 
-        return response()->json($ads);
-
 //        $ads = DB::table('ads')
 //            ->join('realties', 'ads.realty_id', '=', 'realties.id')
 //            ->join('type_rents', 'realties.type_rent_id', '=', 'type_rents.id')
@@ -44,6 +43,22 @@ class MainController extends Controller
 //            ->select('ads.*', 'type_rents.title as rent_type', 'type_realties.title as realty_type')
 //            ->get();
 //
-//        return response()->json($ads);
+        return response()->json($ads);
+    }
+
+    public function show(Realty $realty)
+    {
+        // Загружаем отзывы для недвижимости и информацию о пользователе, оставившем отзыв
+        $realty->load('feedbacks.user');
+
+        // Вычисляем средний рейтинг недвижимости
+        $averageRating = $realty->feedbacks()->avg('rating');
+
+        // Добавляем средний рейтинг в массив данных недвижимости
+        $realtyData = $realty->toArray();
+        $realtyData['average_rating'] = $averageRating ?? null;
+
+        // Возвращаем JSON-ответ
+        return response()->json($realtyData);
     }
 }

@@ -30,6 +30,16 @@ class Realty extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'realty_id');
+    }
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'realty_id', 'user_id')->withTimestamps();
+    }
+
 //    public function getTypeRentIdAttribute($value)
 //    {
 //        return $this->typeRent->title ?? $value;

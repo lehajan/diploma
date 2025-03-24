@@ -66,4 +66,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Realty::class, 'user_id');
     }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Realty::class, 'favorites', 'user_id', 'realty_id')->withTimestamps();
+    }
 }

@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Realty;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RealtyController extends Controller
 {
@@ -42,9 +42,7 @@ class RealtyController extends Controller
             $realty->save();
         }
 
-
-
-        return response()->json(['massage' => 'Объявление о продаже недвижимости успешно создано!']);
+        return response()->json(['message' => 'Объявление о продаже недвижимости успешно создано!']);
     }
 
     public function delete(Realty $realty)
@@ -56,19 +54,8 @@ class RealtyController extends Controller
         }else{
             return response()->json(['Вы не можете удалить эту квартиру']);
         }
-
     }
 
-//    public function preview()
-//    {
-//        $apartments = Realty::all();
-//        $apartments->load(['typeRent', 'typeRealty']);
-//        foreach ($apartments as $apartment) {
-//            echo $apartment->typeRent->title; // Название типа аренды
-//            echo $apartment->typeRealty->title; // Название типа недвижимост
-//        }
-//        return $apartments;
-//    }
     public function preview()
     {
         $apartments = Realty::all();
@@ -88,7 +75,10 @@ class RealtyController extends Controller
 
     public function filter(Request $request)
     {
-        $query = Realty::query();
+        $propertyTypes = DB::table('type_realties')->get();
+        $renovationTypes = DB::table('type_repairs')->get();
+
+        $query = Realty::with(['typeRent', 'typeRealty', 'typeRepair']);
 
         // Тип аренды
         if ($request->has('type_rent_id')) {
@@ -110,7 +100,7 @@ class RealtyController extends Controller
 
         // Количество комнат
         if ($request->has('count_rooms')) {
-            $query->where('count_rooms', $request->input('count_rooms'));
+            $query->whereIn('count_rooms', $request->input('count_rooms'));
         }
 
         // Общая площадь
@@ -138,12 +128,16 @@ class RealtyController extends Controller
         }
 
         // Ремонт
-        if ($request->has('repair_type')) {
-            $query->where('repair_type', $request->input('repair_type'));
+        if ($request->has('repair_id')) {
+            $query->where('repair_id', $request->input('repair_id'));
         }
 
         $realties = $query->get();
 
-        return response()->json($realties);
+        return response()->json([
+            'propertyTypes' => $propertyTypes, // Типы недвижимости
+            'renovationTypes' => $renovationTypes, // Типы ремонта
+            'listings' => $realties, // Отфильтрованные объявления
+        ]);
     }
 }

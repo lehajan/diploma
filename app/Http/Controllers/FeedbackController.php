@@ -8,19 +8,28 @@ use Illuminate\Support\Facades\Auth;
 
 class FeedbackController extends Controller
 {
-    public function create(request $request)
+    public function create(Request $request)
     {
         $data = $request->validate([
-            'rating' => 'required | numeric | min:0 | max:5',
-            'comment' => 'required',
+            'realty_id' => 'required|integer|exists:realties,id',
+            'rating' => 'required|numeric|min:0|max:5',
+            'comment' => 'required|string',
         ]);
-        $user_id = Auth::id();
-        $data['user_id'] = $user_id;
-        Feedback::create($data
-//            'user_id' => $data['user_id'],
-//            'rating' => $data['rating'],
-//            'comment' => $data['comment']
-        );
+
+        $data['user_id'] = Auth::id(); //получение ID пользователя из аутентификации
+        $feedback = Feedback::create($data);
+        $feedback->load('user');
+
         return response()->json(['отзыв создан!']);
+    }
+
+    public function delete(Feedback $feedback)
+    {
+        if (Auth::id() !== $feedback->user_id){
+            return response()->json('У вас нет прав для удаления этого отзыва');
+        }
+
+        $feedback->delete();
+        return response()->json('отзыв удален!');
     }
 }

@@ -93,6 +93,10 @@ class RegistrationController extends Controller
 //            return response()->json(['error', 'Email не верифицирован']);
 //        }
 
+        if (!Cache::has('verified_email_' . $data['email'])) {
+            return response()->json(['error' => 'Email не верифицирован'], 400);
+        }
+
         //создание пользователя
         User::create([
             'name' => $data['name'],

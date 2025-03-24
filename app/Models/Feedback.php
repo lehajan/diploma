@@ -9,9 +9,22 @@ class Feedback extends Model
 {
     use HasFactory;
 
+    protected $table = 'feedbacks';
+
     protected $fillable = [
-        'user_id',
+        'realty_id',
         'rating',
         'comment',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function realty()
+    {
+        return $this->belongsTo(Realty::class);
+    }
 }

@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedback', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->float('rating');
-            $table->string('comment');
-            $table->timestamps();
-
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('realty_id');
+            $table->unique(['user_id', 'realty_id']); // Предотвращение дубликатов
+            $table->timestamps();
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feedback');
+        Schema::dropIfExists('favorites');
     }
 };
