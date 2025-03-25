@@ -29,7 +29,7 @@ class RegistrationController extends Controller
 
         Mail::to($request->email)->send(new VerificationCodeMail($verificationCode));
 
-        return response()->json(['message', 'Код отправлен на вашу почту!']);
+        return response()->json(['message' => 'Код отправлен на вашу почту!']);
 //        try {
 //            Mail::to($request->email)->send(new VerificationCodeMail($verificationCode));
 //            Log::info('Email sent successfully to: ' . $request->email);
@@ -50,10 +50,10 @@ class RegistrationController extends Controller
         $code = Cache::get('verification_code_' . $request->email);
 
         if (!$code) {
-            return response()->json(['error', 'код верификации истек']);
+            return response()->json(['error' => 'код верификации истек']);
         }
         if ($request->verification_code != $code) {
-            return response()->json(['error', 'Неправильный код']);
+            return response()->json(['error' => 'Неправильный код']);
         }
 
         //добавление email в кэш, чтобы знать, что пользователь прошел верификацию
@@ -61,7 +61,7 @@ class RegistrationController extends Controller
 
         Cache::forget('verification_code_' . $request->email); //удаление кода из кэша
 
-        return response()->json(['message', 'Код подтвержден!']);
+        return response()->json(['message' => 'Код подтвержден!']);
     }
     public function reg(Request $request)
     {

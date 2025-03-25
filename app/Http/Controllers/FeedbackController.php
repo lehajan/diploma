@@ -20,7 +20,7 @@ class FeedbackController extends Controller
         $feedback = Feedback::create($data);
         $feedback->load('user');
 
-        return response()->json(['отзыв создан!']);
+        return response()->json(['message' => 'отзыв создан!']);
     }
 
     public function delete(Feedback $feedback)
@@ -30,6 +30,6 @@ class FeedbackController extends Controller
         }
 
         $feedback->delete();
-        return response()->json('отзыв удален!');
+        return response()->json(['message' => 'отзыв удален!']);
     }
 }
