@@ -35,7 +35,7 @@ class RealtyFactory extends Factory
             'floor' => $this->faker->numberBetween(1, 25),
             'repair_id' => TypeRepair::get()->random()->id,
             'year_construction' => $this->faker->year(),
-            'image' => $this->faker->imageUrl(),
+            'images' => $this->faker->imageUrl(),
             'description' => $this->faker->text(),
         ];
     }

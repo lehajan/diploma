@@ -66,8 +66,12 @@ class Realty extends Model
         'floor',
         'repair_id',
         'year_construction',
-        'image',
+        'images',
         'description'
+    ];
+
+    protected $casts = [
+        'images' => 'array', // Добавляем это свойство
     ];
 
     protected $hidden = [

@@ -21,9 +21,9 @@ return new class extends Migration
 //            $table->date('date_start')->nullable();
 //            $table->date('date_end')->nullable();
             $table->enum('count_rooms', ['студия', '1', '2', '3', '4', '5', '6+', 'свободная планировка']);
-            $table->double('total_square');
-            $table->double('living_square');
-            $table->double('kitchen_square');
+            $table->double('total_square')->nullable();
+            $table->double('living_square')->nullable();
+            $table->double('kitchen_square')->nullable();
             $table->integer('floor');
             $table->unsignedBigInteger('repair_id');
             $table->integer('year_construction');
@@ -35,7 +35,7 @@ return new class extends Migration
 //            $table->enum('bathroom', ['ванна', 'душевая кабина']);
 //            $table->json('technic');
 //            $table->json('connection');
-            $table->string('image')->nullable();
+            $table->JSON('images')->nullable();
             $table->text('description');
             $table->timestamps();
         });

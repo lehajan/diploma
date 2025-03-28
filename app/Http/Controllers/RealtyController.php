@@ -20,15 +20,16 @@ class RealtyController extends Controller
             'type_rent_id' => 'required|integer',
             'type_realty_id' => 'required|integer',
             'address' => 'required|string',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:1',
             'count_rooms' => 'required|in:студия,1,2,3,4,5,6+,свободная планировка',
-            'total_square' => 'required|numeric',
-            'living_square' => 'required|numeric',
-            'kitchen_square' => 'required|numeric',
-            'floor' => 'required|integer',
+            'total_square' => 'nullable|required|numeric|min:1',
+            'living_square' => 'nullable|required|numeric|min:1',
+            'kitchen_square' => 'nullable|required|numeric|min:1',
+            'floor' => 'required|integer|min:1',
             'repair_id' => 'required|integer',
-            'year_construction' => 'required|integer|max:' . date('Y'),
-            'image' => 'nullable|image|max:2048',
+            'year_construction' => 'required|integer|min:1|max:' . date('Y'),
+            'images' => 'required|array|max:10',
+            'images.*' => 'image|max:2048',
             'description' => 'nullable|string',
         ]);
 
@@ -36,9 +37,14 @@ class RealtyController extends Controller
         $data['user_id'] = $user_id;
         $realty = Realty::create($data);
 
-        if($request->hasFile('image')) {
-            $path = $request->file('image')->store('images', 'public');
-            $realty->image = $path;
+        if($request->hasFile('images')) {
+            $paths = [];
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('images', 'public');
+                $paths[] = $path;
+            }
+
+            $realty->images = json_encode($paths);
             $realty->save();
         }
 
@@ -77,6 +83,7 @@ class RealtyController extends Controller
     {
         $propertyTypes = DB::table('type_realties')->get();
         $renovationTypes = DB::table('type_repairs')->get();
+        $rentTypes = DB::table('type_rents')->get();
 
         $query = Realty::with(['typeRent', 'typeRealty', 'typeRepair']);
 
@@ -138,6 +145,7 @@ class RealtyController extends Controller
             'propertyTypes' => $propertyTypes, // Типы недвижимости
             'renovationTypes' => $renovationTypes, // Типы ремонта
             'listings' => $realties, // Отфильтрованные объявления
+            'rentTypes' => $rentTypes, //возвращение типа аренды
         ]);
     }
 }
