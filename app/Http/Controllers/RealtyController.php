@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class RealtyController extends Controller
 {
@@ -22,8 +23,8 @@ class RealtyController extends Controller
             'address' => 'required|string',
             'price' => 'required|numeric|min:1',
             'count_rooms' => 'required|in:студия,1,2,3,4,5,6+,свободная планировка',
-            'total_square' => 'nullable|required|numeric|min:1',
-            'living_square' => 'nullable|required|numeric|min:1',
+            'total_square' => 'required|numeric|min:1',
+            'living_square' => 'required|numeric|min:1',
             'kitchen_square' => 'nullable|required|numeric|min:1',
             'floor' => 'required|integer|min:1',
             'repair_id' => 'required|integer',
@@ -40,11 +41,11 @@ class RealtyController extends Controller
         if($request->hasFile('images')) {
             $paths = [];
             foreach ($request->file('images') as $image) {
-                $path = $image->store('images', 'public');
-                $paths[] = $path;
+                $filename = uniqid().'.'.$image->extension(); // Генерация уникального имени
+                $path = $image->storeAs('public/images', $filename);
+                $paths[] = str_replace('public/', 'storage/', $path); // Без экранирования
             }
-
-            $realty->images = json_encode($paths);
+            $realty->images = json_encode($paths, JSON_UNESCAPED_SLASHES); // Отключаем экранирование слешей
             $realty->save();
         }
 
@@ -60,6 +61,56 @@ class RealtyController extends Controller
         }else{
             return response()->json(['Вы не можете удалить эту квартиру']);
         }
+    }
+
+    public function update(Request $request, Realty $realty)
+    {
+        $user = Auth::user();
+        if ($realty->user_id !== $user->id) {
+            return response()->json(['Вы не можете редактировать это объявления, т.к. вы не являетесь его владельцем'], 403);
+        }
+
+        $data = $request->validate([
+            'type_rent_id' => 'nullable|integer',
+            'type_realty_id' => 'nullable|integer',
+            'address' => 'string',
+            'price' => 'nullable|numeric|min:1',
+            'count_rooms' => 'nullable|in:студия,1,2,3,4,5,6+,свободная планировка',
+            'total_square' => 'nullable|numeric|min:1',
+            'living_square' => 'nullable|numeric|min:1',
+            'kitchen_square' => 'nullable|numeric|min:1',
+            'floor' => 'nullable|integer|min:1',
+            'repair_id' => 'nullable|integer',
+            'year_construction' => 'nullable|integer|min:1|max:' . date('Y'),
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'nullable|image|max:2048',
+            'description' => 'nullable|string',
+        ]);
+
+        // Обновляем существующие изображения
+        if ($request->hasFile('images')) {
+            // Удаляем старые изображения (если нужно)
+             $oldImages = json_decode($realty->images, true);
+             foreach ($oldImages as $oldImage) {
+                 Storage::delete($oldImage);
+             }
+
+            $paths = [];
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('images', 'public');
+                $paths[] = $path;
+
+            }
+
+            $data['images'] = json_encode($paths);
+        } else {
+            // Если изображения не обновляются, оставляем старые
+            unset($data['images']);
+        }
+
+        $realty->update($data);
+
+        return response()->json(['message' => 'Объявление успешно обновлено']);
     }
 
     public function preview()

@@ -35,6 +35,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 
     Route::post('realty/store', 'App\Http\Controllers\RealtyController@store');
     Route::delete('realty/delete/{realty}', 'App\Http\Controllers\RealtyController@delete');
+    Route::patch('realty/update/{realty}', 'App\Http\Controllers\RealtyController@update');
 
     Route::post('favorite/addToFavorite/{realty}', 'App\Http\Controllers\FavoriteController@addToFavorite');
     Route::delete('favorite/destroy/{realty}', 'App\Http\Controllers\FavoriteController@destroy');

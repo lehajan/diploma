@@ -15,11 +15,17 @@ class MainController extends Controller
 
         // Преобразование данных
         $ads = $ads->map(function ($ad) {
+            // Декодируем JSON и применяем asset() к каждому пути
+            $images = json_decode($ad->images, true) ?? [];
+            $processedImages = array_map(function($path) {
+                return asset($path);
+            }, $images);
+
             return [
                 'id' => $ad->id,
                 'user_id' => $ad->owner->name,
-                'type_rent' => $ad->typeRent->title, // Замена id на значение
-                'type_realty' => $ad->typeRealty->title, // Замена id на значение
+                'type_rent' => $ad->typeRent->title,
+                'type_realty' => $ad->typeRealty->title,
                 'address' => $ad->address,
                 'price' => $ad->price,
                 'count_rooms' => $ad->count_rooms,
@@ -29,20 +35,13 @@ class MainController extends Controller
                 'floor' => $ad->floor,
                 'repair_id' => $ad->typeRepair->title,
                 'year_construction' => $ad->year_construction,
-                'image' => $ad->image,
+                'images' => $processedImages, // Теперь это массив с полными URL
                 'description' => $ad->description,
                 'created_at' => $ad->created_at,
                 'updated_at' => $ad->updated_at,
             ];
         });
 
-//        $ads = DB::table('ads')
-//            ->join('realties', 'ads.realty_id', '=', 'realties.id')
-//            ->join('type_rents', 'realties.type_rent_id', '=', 'type_rents.id')
-//            ->join('type_realties', 'realties.type_realty_id', '=', 'type_realties.id')
-//            ->select('ads.*', 'type_rents.title as rent_type', 'type_realties.title as realty_type')
-//            ->get();
-//
         return response()->json($ads);
     }
 

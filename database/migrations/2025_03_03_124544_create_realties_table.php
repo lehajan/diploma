@@ -30,7 +30,7 @@ return new class extends Migration
 //            $table->enum('type_bathroom', ['раздельный', 'совмещенный']);
 //            $table->enum('balcony', ['лоджия', 'балкон']);
 //            $table->json('type_elevator');
-//            $table->enum('repair', ['космитический', 'евро', 'дизайнерский']);
+//            $table->enum('repair', ['косметический', 'евро', 'дизайнерский']);
 //            $table->boolean('furniture');
 //            $table->enum('bathroom', ['ванна', 'душевая кабина']);
 //            $table->json('technic');

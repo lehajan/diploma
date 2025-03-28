@@ -70,6 +70,10 @@ class Realty extends Model
         'description'
     ];
 
+//    protected $guarded = [
+//        'user_id'
+//    ];
+
     protected $casts = [
         'images' => 'array', // Добавляем это свойство
     ];
