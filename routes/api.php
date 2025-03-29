@@ -31,7 +31,8 @@ Route::group(['middleware' => 'check.guest'], function () {
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('user/profile', 'App\Http\Controllers\UserController@profile');
     Route::delete('user/delete', 'App\Http\Controllers\UserController@delete');
-    Route::patch('user/update', 'App\Http\Controllers\UserController@update');
+    Route::patch('user/updateProfile', 'App\Http\Controllers\UserController@updateProfile');
+    Route::patch('user/updatePassword', 'App\Http\Controllers\UserController@updatePassword');
 
     Route::post('realty/store', 'App\Http\Controllers\RealtyController@store');
     Route::delete('realty/delete/{realty}', 'App\Http\Controllers\RealtyController@delete');

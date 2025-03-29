@@ -26,7 +26,7 @@ class UserController extends Controller
         response()->json('Профиль удален!');
     }
 
-    public function update(Request $request)
+    public function updateProfile(Request $request)
     {
         $user = Auth::user();
 
@@ -35,39 +35,37 @@ class UserController extends Controller
             'surname' => 'required | string | regex:/^[А-Яа-яЁё\s-]+$/u',
             'patronymic' => 'required | string | regex:/^[А-Яа-яЁё\s-]+$/u',
             'phone' => 'required | string | regex:/^\+7\d{10}$/',
-            'current_password' => 'required_with:password1',
-            'password1' => 'nullable | string | min:8 | confirmed',
-            'password2' => 'nullable | string',
         ]);
 
-        if ($data['password1']) {
-            if ($data['password1'] != $data['password2']) {
-                return response()->json(['error' => 'Пароли не совпадают'], 400);
-            }
-            if (!Hash::check($data['current_password'], $user->password)){
-                return response()->json(['error' => 'Неверный текущий пароль'], 400);
-            }
-
-            $user->update([
-                'name' => $data['name'],
-                'surname' => $data['surname'],
-                'patronymic' => $data['patronymic'],
-                'phone' => $data['phone'],
-                'password' => Hash::make($data['password1']),
-            ]);
-        } else {
-            $user->update([
-               'name' => $data['name'],
-               'surname' => $data['surname'],
-               'patronymic' => $data['patronymic'],
-               'phone' => $data['phone'],
-            ]);
-        }
+        $user->update([
+            'name' => $data['name'],
+            'surname' => $data['surname'],
+            'patronymic' => $data['patronymic'],
+            'phone' => $data['phone'],
+        ]);
         return response()->json(['message' => 'Данные обновлены']);
     }
 
-    public function passwordRecovery()
+    public function updatePassword(Request $request)
     {
+        $user = Auth::user();
 
+        $data = $request->validate([
+            'current_password' => 'required',
+            'password1' => 'required | string | min:8 | confirmed',
+            'password1_confirmation' => 'required | string',
+        ]);
+
+        if ($data['password1'] != $data['password1_confirmation']) {
+            return response()->json(['error' => 'Пароли не совпадают'], 400);
+        }
+        if (!Hash::check($data['current_password'], $user->password)) {
+            return response()->json(['error' => 'Неверный текущий пароль'], 400);
+        }
+        $user->update([
+            'password' => $data['password1'],
+        ]);
+        return response()->json(['message' => 'Пароль обновлен']);
     }
+
 }

@@ -97,15 +97,15 @@ class RealtyController extends Controller
 
             $paths = [];
             foreach ($request->file('images') as $image) {
-                $path = $image->store('images', 'public');
-                $paths[] = $path;
-
+                $filename = uniqid().'.'.$image->extension(); // Генерация уникального имени
+                $path = $image->storeAs('public/images', $filename);
+                $paths[] = str_replace('public/', 'storage/', $path); // Без экранирования
             }
 
-            $data['images'] = json_encode($paths);
-        } else {
-            // Если изображения не обновляются, оставляем старые
-            unset($data['images']);
+            $data['images'] = json_encode($paths, JSON_UNESCAPED_SLASHES);
+            } else {
+                // Если изображения не обновляются, оставляем старые
+                unset($data['images']);
         }
 
         $realty->update($data);
