@@ -192,6 +192,18 @@ class RealtyController extends Controller
 
         $realties = $query->get();
 
+        $realties->transform(function ($realty) {
+            if ($realty->images) {
+                $images = json_decode($realty->images, true);
+                if (is_array($images)) {
+                    $realty->images = array_map(function ($image) {
+                        return asset($image);
+                    }, $images);
+                }
+            }
+            return $realty;
+        });
+
         return response()->json([
             'propertyTypes' => $propertyTypes, // Типы недвижимости
             'renovationTypes' => $renovationTypes, // Типы ремонта
