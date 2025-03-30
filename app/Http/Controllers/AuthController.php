@@ -75,4 +75,17 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
+
+//    protected function respondWithToken($token)
+//    {
+//        $ttl = auth()->factory()->getTTL();
+//
+//        return response()->json([
+//            'access_token' => $token,
+//            'token_type' => 'bearer',
+//            'expires_in' => $ttl * 60, // в секундах (стандарт OAuth)
+//            'expires_in_minutes' => $ttl, // для удобства чтения
+//            'expires_at' => now()->addMinutes($ttl)->toDateTimeString() // точная дата истечения
+//        ]);
+//    }
 }
