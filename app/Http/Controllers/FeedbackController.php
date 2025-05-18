@@ -37,18 +37,25 @@ class FeedbackController extends Controller
     {
         // Валидация что realtyId существует
         $request->validate([
-            'realty_id' => 'sometimes|integer|exists:realties,id'
+            'realty_id' => 'sometimes|integer|exists:realties,id',
+            'sort' => 'sometimes|string|in:date,rating' // новый параметр сортировки
         ]);
 
-        // Получаем отзывы с информацией о пользователях
-        $feedbacks = Feedback::with(['user' => function($query) {
-            $query->select('id', 'name'); // Выбираем только нужные поля пользователя
-        }])
-            ->where('realty_id', $realtyId)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $sort = $request->input('sort', 'date'); // по умолчанию сортировка по дате
 
-        // Форматируем ответ
+        $query = Feedback::with(['user' => function($query) {
+            $query->select('id', 'name');
+        }])->where('realty_id', $realtyId);
+
+        // Применяем сортировку
+        if ($sort === 'rating') {
+            $query->orderBy('rating', 'desc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $feedbacks = $query->get();
+
         $formattedFeedbacks = $feedbacks->map(function($feedback) {
             return [
                 'id' => $feedback->id,

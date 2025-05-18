@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TemporaryPassword;
+use App\Models\Realty;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 use function Laravel\Prompts\password;
 
 class UserController extends Controller
@@ -15,6 +20,19 @@ class UserController extends Controller
     {
         $user = Auth::user();
         return response()->json(['user', $user]);
+    }
+
+    public function viewApartments()
+    {
+        $user = Auth::user();
+
+        $apartments = Realty::where('user_id', $user->id)->get();
+
+        // Возвращаем результат в формате JSON
+        return response()->json([
+            'success' => true,
+            'apartments' => $apartments
+        ]);
     }
 
 
@@ -68,4 +86,21 @@ class UserController extends Controller
         return response()->json(['message' => 'Пароль обновлен']);
     }
 
+    public function sendTemporaryPassword(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
+        $tempPassword = Str::random(8);
+
+        $user->password = Hash::make($tempPassword);
+        $user->save();
+
+        Mail::to($user->email)->send(new TemporaryPassword($user, $tempPassword));
+
+        return response()->json(['message' => 'Временный пароль отправлен']);
+    }
 }

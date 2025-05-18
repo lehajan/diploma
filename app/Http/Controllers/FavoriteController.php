@@ -30,10 +30,16 @@ class FavoriteController extends Controller
         return response()->json(['message' => 'Квартира удалена из избранного'], 200);
     }
 
-    public function show(Realty $realty)
+    public function show(Realty $realty, Request $request)
     {
         $user = Auth::user();
-        $favorites = $user->favorites;
+        $favorites = $user->favorites()
+            ->when($request->has('sort_price'), function($query) use ($request) {
+                // Сортируем по возрастанию или убыванию цены
+                $sortDirection = $request->input('sort_direction', 'asc');
+                $query->orderBy('price', $sortDirection);
+            })
+            ->get();
 
         return response()->json(['favorites' => $favorites], 200);
     }

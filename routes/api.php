@@ -18,15 +18,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('feedback/outputFeedback/{realty}', 'App\Http\Controllers\FeedbackController@outputFeedback');
+Route::get('show/{realty}', 'App\Http\Controllers\MainController@show');
+Route::get('realty/filter', 'App\Http\Controllers\RealtyController@filter');
+Route::get('index', 'App\Http\Controllers\MainController@index');
+
 Route::group(['middleware' => 'check.guest'], function () {
     Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode');
     Route::post('verifyCode', 'App\Http\Controllers\RegistrationController@verifyCode');
     Route::post('reg', 'App\Http\Controllers\RegistrationController@reg');
-    Route::get('index', 'App\Http\Controllers\MainController@index');
-    Route::get('preview', 'App\Http\Controllers\RealtyController@preview');
-    Route::get('realty/filter', 'App\Http\Controllers\RealtyController@filter');
-    Route::get('show/{realty}', 'App\Http\Controllers\MainController@show');
-    Route::get('feedback/outputFeedback/{realty}', 'App\Http\Controllers\FeedbackController@outputFeedback');
+//    Route::get('preview', 'App\Http\Controllers\RealtyController@preview');
+    Route::post('user/sendTemporaryPassword', 'App\Http\Controllers\UserController@sendTemporaryPassword');
 });
 
 Route::group(['middleware' => 'jwt.auth'], function () {
@@ -34,6 +36,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::delete('user/delete', 'App\Http\Controllers\UserController@delete');
     Route::patch('user/updateProfile', 'App\Http\Controllers\UserController@updateProfile');
     Route::patch('user/updatePassword', 'App\Http\Controllers\UserController@updatePassword');
+    Route::get('user/viewApartments', 'App\Http\Controllers\UserController@viewApartments');
 
     Route::post('realty/store', 'App\Http\Controllers\RealtyController@store');
     Route::delete('realty/delete/{realty}', 'App\Http\Controllers\RealtyController@delete');
