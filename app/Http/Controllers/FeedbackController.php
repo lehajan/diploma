@@ -42,10 +42,15 @@ class FeedbackController extends Controller
         ]);
 
         $sort = $request->input('sort', 'date'); // по умолчанию сортировка по дате
+        $userId = auth()->id();
 
-        $query = Feedback::with(['user' => function($query) {
-            $query->select('id', 'name');
-        }])->where('realty_id', $realtyId);
+        $query = Feedback::with(['user', 'likes' => function ($query) use ($userId) {
+            if ($userId) {
+                $query->where('user_id', $userId);
+            }
+        }])
+            ->withCount('likes')
+            ->where('realty_id', $realtyId);
 
         // Применяем сортировку
         if ($sort === 'rating') {
@@ -66,6 +71,8 @@ class FeedbackController extends Controller
                 'rating' => $feedback->rating,
                 'comment' => $feedback->comment,
                 'created_at' => $feedback->created_at->format('d.m.Y H:i'),
+                'likes_count' => $feedback->likes_count ?? 0,
+                'is_liked' => $feedback->likes->isNotEmpty(),
             ];
         });
 

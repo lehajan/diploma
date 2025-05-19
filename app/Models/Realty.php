@@ -45,9 +45,6 @@ class Realty extends Model
         return $this->hasOne(Archive::class, 'realty_id');
     }
 
-
-
-
     protected $fillable = [
         'user_id',
         'type_rent_id',

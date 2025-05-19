@@ -52,6 +52,8 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('archive/addToArchive/{realty}', 'App\Http\Controllers\ArchiveController@addToArchive');
     Route::delete('archive/restore/{realty}', 'App\Http\Controllers\ArchiveController@restore');
     Route::get('archive/showArchive', 'App\Http\Controllers\ArchiveController@showArchive');
+
+    Route::post('like/addLike/{feedback}', 'App\Http\Controllers\LikeController@addLike');
 });
 
 //Route::post('sendVerificationCode', 'App\Http\Controllers\RegistrationController@sendVerificationCode');
