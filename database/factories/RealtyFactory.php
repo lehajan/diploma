@@ -26,8 +26,6 @@ class RealtyFactory extends Factory
             'type_realty_id' => TypeRealty::get()->random()->id,
             'address' => $this->faker->address(),
             'price' => $this->faker->randomFloat(2, 10, 100),
-//            'date_start' => $this->faker->date(),
-//            'date_end' => $this->faker->date(),
             'count_rooms' => $this->faker->numberBetween(1, 5),
             'total_square' => $this->faker->randomFloat(2, 10, 100),
             'living_square' => $this->faker->randomFloat(2, 10, 100),
@@ -37,6 +35,7 @@ class RealtyFactory extends Factory
             'year_construction' => $this->faker->year(),
             'images' => $this->faker->imageUrl(),
             'description' => $this->faker->text(),
+            'is_archived' => false, // добавляем поле с дефолтным значением
         ];
     }
 }

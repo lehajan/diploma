@@ -40,15 +40,12 @@ class Realty extends Model
         return $this->belongsToMany(User::class, 'favorites', 'realty_id', 'user_id')->withTimestamps();
     }
 
-//    public function getTypeRentIdAttribute($value)
-//    {
-//        return $this->typeRent->title ?? $value;
-//    }
-//
-//    public function getTypeRealtyIdAttribute($value)
-//    {
-//        return $this->typeRealty->title ?? $value;
-//    }
+    public function archive()
+    {
+        return $this->hasOne(Archive::class, 'realty_id');
+    }
+
+
 
 
     protected $fillable = [
@@ -67,7 +64,8 @@ class Realty extends Model
         'repair_id',
         'year_construction',
         'images',
-        'description'
+        'description',
+        'is_archived'
     ];
 
 //    protected $guarded = [
@@ -76,6 +74,7 @@ class Realty extends Model
 
     protected $casts = [
         'images' => 'array', // Добавляем это свойство
+        'is_archived' => 'boolean'
     ];
 
     protected $hidden = [
